@@ -4,6 +4,8 @@
 #include <cstddef>
 #include <new>
 
+char const *_freertos_heap4_new_error_message;
+
 void *operator new(size_t size)
 {
     DI_DisableGlobalInterrupt();
@@ -11,6 +13,7 @@ void *operator new(size_t size)
     DI_EnableGlobalInterrupt();
     if (ptr == nullptr)
     {
+        _freertos_heap4_new_error_message = "分配内存失败";
         throw std::bad_alloc{};
     }
 
@@ -24,6 +27,7 @@ void *operator new[](size_t size)
     DI_EnableGlobalInterrupt();
     if (ptr == nullptr)
     {
+        _freertos_heap4_new_error_message = "分配内存失败";
         throw std::bad_alloc{};
     }
 
@@ -49,6 +53,11 @@ void *operator new(size_t size, std::nothrow_t const &) noexcept
     DI_DisableGlobalInterrupt();
     void *p = pvPortMalloc(size);
     DI_EnableGlobalInterrupt();
+    if (p == nullptr)
+    {
+        _freertos_heap4_new_error_message = "分配内存失败";
+    }
+
     return p;
 }
 
@@ -57,6 +66,11 @@ void *operator new[](size_t size, std::nothrow_t const &) noexcept
     DI_DisableGlobalInterrupt();
     void *p = pvPortMalloc(size);
     DI_EnableGlobalInterrupt();
+    if (p == nullptr)
+    {
+        _freertos_heap4_new_error_message = "分配内存失败";
+    }
+
     return p;
 }
 
