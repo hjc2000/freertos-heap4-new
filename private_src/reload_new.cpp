@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <new>
 
-char const volatile *_freertos_heap4_new_error_message = nullptr;
+char const *_freertos_heap4_new_error_message = nullptr;
 
 void *operator new(size_t size)
 {
